@@ -140,6 +140,7 @@ We can consider `HLT` to be similar to Python's `exit()` in that we stop
 whatever we are doing, wherever we are.
 
 ## Step 5: Add the `LDI` instruction
+#LDI = It's like using pointer in c, so memory address2 has address of memory address 1 and separately memory address 1 has some value,so here we are trying to retrieve a data indirectly.
 
 This instruction sets a specified register to a specified value.
 
