@@ -24,6 +24,7 @@ class CPU:
         self.reg = [0] * 8
         self.hlt = False
         self.sp = None
+        self.fl = [0] * 8
 
         self.ops = {
             LDI: self.op_ldi,
@@ -62,11 +63,13 @@ class CPU:
 
     def op_cmp(self, operand_a, operand_b):
         if operand_a < operand_b:
-            self.pc -= 1
+            self.fl = 1
         elif operand_a == operand_b:
-            self.pc = 0
+            self.fl = 1
         elif operand_a > operand_b:
-            self.pc += 1
+            self.fl = 1
+        else:
+            self.fl = 0
 
     def op_jmp(self, operand_a, operand_b):
         pass
