@@ -72,13 +72,15 @@ class CPU:
             self.fl = 0
 
     def op_jmp(self, operand_a, operand_b):
-        pass
+        self.pc = self.reg[operand_b]
 
     def op_jeq(self, operand_a, operand_b):
-        pass
+        if self.fl == 1:
+            self.op_jmp(operand_a, operand_b)
 
     def op_jne(self, operand_a, operand_b):
-        pass
+        if self.fl == 0:
+            self.op_jmp(operand_a, operand_b)
 
     def ram_read(self, address):
         return self.ram[address]
