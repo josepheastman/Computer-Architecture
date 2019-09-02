@@ -6,6 +6,8 @@ LDI = 0b10000010
 MUL = 0b10100010
 PRN = 0b01000111
 HLT = 0b00000001
+PUSH = 0b01000101
+POP = 0b01000110
 
 
 class CPU:
@@ -17,12 +19,15 @@ class CPU:
         self.pc = 0
         self.reg = [0] * 8
         self.hlt = False
+        self.sp = None
 
         self.ops = {
             LDI: self.op_ldi,
             HLT: self.op_hlt,
             MUL: self.op_mul,
-            PRN: self.op_prn
+            PRN: self.op_prn,
+            PUSH: self.push,
+            POP: self.pop
         }
 
     def op_ldi(self, operand_a, operand_b):
@@ -37,6 +42,20 @@ class CPU:
     def op_mul(self, operand_a, operand_b):
         self.alu('MUL', operand_a, operand_b)
 
+    def push(self, operand_a, operand_b):
+        self.reg[7] -= 1
+        self.sp = self.reg[7]
+
+        self.ram[self.sp] = self.reg[operand_a]
+
+    def pop(self, operand_a, operand_b):
+        self.sp = self.reg[7]
+
+        operand_b = self.ram[self.sp]
+        self.reg[operand_a] = operand_b
+
+        self.reg[7] += 1
+
     def ram_read(self, address):
         return self.ram[address]
 
@@ -47,8 +66,6 @@ class CPU:
         """Load a program into memory."""
 
         address = 0
-
-        # For now, we've just hardcoded a program:
 
         with open(filename) as file:
             for line in file:
@@ -63,20 +80,6 @@ class CPU:
                 if first_bit == '0' or first_bit == '1':
                     self.ram[address] = int(instruction[:8], 2)
                     address += 1
-
-        # program = [
-        #     # From print8.ls8
-        #     0b10000010,  # LDI R0,8
-        #     0b00000000,
-        #     0b00001000,
-        #     0b01000111,  # PRN R0
-        #     0b00000000,
-        #     0b00000001,  # HLT
-        # ]
-
-        # for instruction in program:
-        #     self.ram[address] = instruction
-        #     address += 1
 
     def alu(self, op, reg_a, reg_b):
         """ALU operations."""
@@ -110,9 +113,6 @@ class CPU:
 
     def run(self):
         """Run the CPU."""
-        # LDI = 0b10000010
-        # PRN = 0b01000111
-        # HLT = 0b00000001
 
         while self.hlt == False:
 
@@ -128,17 +128,3 @@ class CPU:
 
             if not ins_set:
                 self.pc += op_size + 1
-
-        # while running:
-        #     IR = self.ram[self.pc]
-        #     if IR == LDI:
-        #         self.register[operand_a] = operand_b
-        #         self.pc += 3
-        #     elif IR == PRN:
-        #         print(self.reg[operand_a])
-        #         self.pc += 2
-        #     elif IR == HLT:
-        #         running = False
-        #     else:
-        #         print("Error Occured")
-        #         break
