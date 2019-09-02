@@ -8,6 +8,10 @@ PRN = 0b01000111
 HLT = 0b00000001
 PUSH = 0b01000101
 POP = 0b01000110
+CMP = 0b10100111
+JMP = 0b01010100
+JEQ = 0b01010101
+JNE = 0b01010110
 
 
 class CPU:
@@ -55,6 +59,23 @@ class CPU:
         self.reg[operand_a] = operand_b
 
         self.reg[7] += 1
+
+    def op_cmp(self, operand_a, operand_b):
+        if operand_a < operand_b:
+            self.pc -= 1
+        elif operand_a == operand_b:
+            self.pc = 0
+        elif operand_a > operand_b:
+            self.pc += 1
+
+    def op_jmp(self, operand_a, operand_b):
+        pass
+
+    def op_jeq(self, operand_a, operand_b):
+        pass
+
+    def op_jne(self, operand_a, operand_b):
+        pass
 
     def ram_read(self, address):
         return self.ram[address]
