@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 
-"""Main."""
+"""Main"""
 
 import sys
 from cpu import *
 
-cpu = CPU()
-
-cpu.load()
-cpu.run()
+if len(sys.argv) == 2:
+    cpu = CPU()
+    cpu.load(sys.argv[1])
+    cpu.run()
+else:
+    print('Error: please provide a filename to excecute instructions')
+    sys.exit(1)
